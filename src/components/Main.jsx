@@ -16,8 +16,8 @@ const Main = ({
 }) => {
   const waveformRef = useRef(null);
   const wavesurferRef = useRef(null);
-  const [loop, setLoop] = useState(true);
-  const [zoomLevel, setZoomLevel] = useState(10);
+  // const [loop, setLoop] = useState(true);
+  // const [zoomLevel, setZoomLevel] = useState(10);
   const [crampedRegion, setCrampedRegion] = useState(null); // State to store the cramped region
 
   const handleSelectRegion = () => {
@@ -101,11 +101,11 @@ const Main = ({
           wsRegions.on("region-out", (region) => {
             console.log("region-out", region);
             if (activeRegion === region) {
-              if (loop) {
-                region.play();
-              } else {
-                activeRegion = null;
-              }
+              // if (loop) {
+              region.play();
+              // } else {
+              activeRegion = null;
+              // }
             }
           });
           wsRegions.on("region-clicked", (region, e) => {
@@ -122,9 +122,9 @@ const Main = ({
         }
 
         // Update the zoom level on slider change
-        wavesurfer.once("decode", () => {
-          wavesurfer.zoom(zoomLevel);
-        });
+        // wavesurfer.once("decode", () => {
+        //   wavesurfer.zoom(zoomLevel);
+        // });
 
         wavesurferRef.current = wavesurfer;
 
@@ -183,7 +183,7 @@ const Main = ({
         wavesurfer.destroy();
       };
     }
-  }, [audioFile, loop, zoomLevel]);
+  }, [audioFile]);
 
   useEffect(() => {
     const audioPlayer = audioPlayerRef.current;
