@@ -3,11 +3,15 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 import Sidebar from "./components/Sidebar";
 
+// New
 export default function App() {
   const [audioFile, setAudioFile] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0); // Current playback position
+  const [currentTime, setCurrentTime] = useState(0);
   const audioPlayerRef = useRef(null);
+  const [isRegion, setIsRegion] = useState(true);
+  const [playRegion, setPlayRegion] = useState(false);
+  const [playCrampedRegion, setPlayCrampedRegion] = useState(false);
 
   const playAudio = () => {
     const audioPlayer = audioPlayerRef.current;
@@ -49,6 +53,13 @@ export default function App() {
           setCurrentTime={setCurrentTime}
           onAudioEnded={handleAudioEnded}
           audioPlayerRef={audioPlayerRef}
+          setIsPlaying={setIsPlaying}
+          isRegion={isRegion}
+          setIsRegion={setIsRegion}
+          playRegion={playRegion}
+          setPlayRegion={setPlayRegion}
+          playCrampedRegion={playCrampedRegion} // Pass the new state
+          setPlayCrampedRegion={setPlayCrampedRegion}
         />
         {/* Define the audio player */}
         <audio
@@ -57,7 +68,16 @@ export default function App() {
           onPause={() => setIsPlaying(false)}
         />
       </div>
-      <Sidebar onPlayAudio={playAudio} isPlaying={isPlaying} />
+      <Sidebar
+        onPlayAudio={playAudio}
+        isPlaying={isPlaying}
+        isRegion={isRegion}
+        setIsRegion={setIsRegion}
+        playRegion={playRegion}
+        setPlayRegion={setPlayRegion}
+        playCrampedRegion={playCrampedRegion} // Pass the new state
+        setPlayCrampedRegion={setPlayCrampedRegion} // Pass the function to set the new state
+      />
     </div>
   );
 }
