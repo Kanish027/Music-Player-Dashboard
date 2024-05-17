@@ -16,9 +16,7 @@ const Main = ({
 }) => {
   const waveformRef = useRef(null);
   const wavesurferRef = useRef(null);
-  // const [loop, setLoop] = useState(true);
-  // const [zoomLevel, setZoomLevel] = useState(10);
-  const [crampedRegion, setCrampedRegion] = useState(null); // State to store the cramped region
+  const [crampedRegion, setCrampedRegion] = useState(null);
 
   const handleSelectRegion = () => {
     setIsPlaying(false);
@@ -43,15 +41,12 @@ const Main = ({
           url: URL.createObjectURL(audioFile),
         });
 
-        // Initialize the Regions plugin
         const wsRegions = wavesurfer.registerPlugin(RegionsPlugin.create());
 
-        // Give regions a random color when they are created
         const random = (min, max) => Math.random() * (max - min) + min;
         const randomColor = () =>
           `rgba(${random(0, 255)}, ${random(0, 255)}, ${random(0, 255)}, 0.5)`;
 
-        // Create some regions at specific time ranges
         wavesurfer.on("decode", () => {
           const cramped = wsRegions.addRegion({
             start: 0,
@@ -60,7 +55,7 @@ const Main = ({
             minLength: 1,
             maxLength: 10,
           });
-          setCrampedRegion(cramped); // Store the cramped region
+          setCrampedRegion(cramped);
 
           wsRegions.addRegion({
             start: 12,
@@ -70,7 +65,6 @@ const Main = ({
             resize: false,
           });
 
-          // Markers (zero-length regions)
           wsRegions.addRegion({
             start: 19,
             content: "Marker",
@@ -92,39 +86,28 @@ const Main = ({
           console.log("Updated region", region);
         });
 
-        {
-          let activeRegion = null;
-          wsRegions.on("region-in", (region) => {
-            console.log("region-in", region);
-            activeRegion = region;
-          });
-          wsRegions.on("region-out", (region) => {
-            console.log("region-out", region);
-            if (activeRegion === region) {
-              // if (loop) {
-              region.play();
-              // } else {
-              activeRegion = null;
-              // }
-            }
-          });
-          wsRegions.on("region-clicked", (region, e) => {
-            e.stopPropagation(); // prevent triggering a click on the waveform
-            activeRegion = region;
+        let activeRegion = null;
+        wsRegions.on("region-in", (region) => {
+          console.log("region-in", region);
+          activeRegion = region;
+        });
+        wsRegions.on("region-out", (region) => {
+          console.log("region-out", region);
+          if (activeRegion === region) {
             region.play();
-            region.setOptions({ color: randomColor() });
-          });
-
-          // Reset the active region when the user clicks anywhere in the waveform
-          wavesurfer.on("interaction", () => {
             activeRegion = null;
-          });
-        }
+          }
+        });
+        wsRegions.on("region-clicked", (region, e) => {
+          e.stopPropagation();
+          activeRegion = region;
+          region.play();
+          region.setOptions({ color: randomColor() });
+        });
 
-        // Update the zoom level on slider change
-        // wavesurfer.once("decode", () => {
-        //   wavesurfer.zoom(zoomLevel);
-        // });
+        wavesurfer.on("interaction", () => {
+          activeRegion = null;
+        });
 
         wavesurferRef.current = wavesurfer;
 
@@ -223,10 +206,12 @@ const Main = ({
     }
   }, [isPlaying, audioPlayerRef, currentTime]);
 
-  // Function to play the cramped region
   useEffect(() => {
-    if (playCrampedRegion && crampedRegion) {
-      crampedRegion.play();
+    const wavesurfer = wavesurferRef.current;
+    if (playCrampedRegion && crampedRegion && wavesurfer) {
+      wavesurfer.play(crampedRegion.start, crampedRegion.end);
+    } else if (!playCrampedRegion && wavesurfer) {
+      wavesurfer.pause();
     }
   }, [playCrampedRegion, crampedRegion]);
 
