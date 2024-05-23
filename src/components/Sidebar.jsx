@@ -21,6 +21,8 @@ const Sidebar = ({
   selectedRegion,
   secondSelectedRegion,
   requestId,
+  isLoading,
+  setIsLoading,
 }) => {
   const navigate = useNavigate();
 
@@ -32,6 +34,7 @@ const Sidebar = ({
   };
 
   const sendToServer2 = async () => {
+    setIsLoading(true);
     try {
       await uploadAudio(
         requestId,
@@ -40,13 +43,16 @@ const Sidebar = ({
         secondSelectedRegion?.start,
         secondSelectedRegion?.end
       );
+      setIsLoading(false);
       navigate("/report");
     } catch (error) {
       console.error("Failed to upload second audio:", error);
+      setIsLoading(false);
     }
   };
 
   const sendToServer1 = async () => {
+    setIsLoading(true);
     try {
       await uploadAudio(
         requestId,
@@ -55,9 +61,11 @@ const Sidebar = ({
         selectedRegion?.start,
         selectedRegion?.end
       );
+      setIsLoading(false);
       handleSecondAudio();
     } catch (error) {
       console.error("Failed to upload first audio:", error);
+      setIsLoading(false);
     }
   };
 

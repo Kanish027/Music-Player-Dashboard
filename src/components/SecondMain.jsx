@@ -15,6 +15,7 @@ const SecondMain = ({
   setPlayCrampedRegion,
   secondSelectedRegion,
   setSecondSelectedRegion,
+  isLoading,
 }) => {
   const waveformRef = useRef(null);
   const wavesurferRef = useRef(null);
@@ -228,21 +229,27 @@ const SecondMain = ({
 
   return (
     <>
-      <div className="bg-gray-600 mx-5 my-8 h-2/6 flex items-center">
-        <div className="flex-grow relative">
-          <div ref={waveformRef} className="waveform w-full" />
-        </div>
-      </div>
-      {audioFile && (
-        <div className="flex justify-center">
-          <button
-            onClick={handleSelectRegion}
-            type="button"
-            className="py-2 w-36 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 "
-          >
-            {isRegion ? "Add Region" : "Remove Region"}
-          </button>
-        </div>
+      {isLoading ? (
+        <div className="text-2xl m-5  font-semibold text-white">Loading...</div>
+      ) : (
+        <>
+          <div className="bg-gray-600 mx-5 my-8 h-2/6 flex items-center">
+            <div className="flex-grow relative">
+              <div ref={waveformRef} className="waveform w-full" />
+            </div>
+          </div>
+          {audioFile && (
+            <div className="flex justify-center">
+              <button
+                onClick={handleSelectRegion}
+                type="button"
+                className="py-2 w-36 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 "
+              >
+                {isRegion ? "Add Region" : "Remove Region"}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </>
   );

@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Main from "./components/Main";
 import SecondMain from "./components/SecondMain";
@@ -16,6 +15,7 @@ export default function Home({ requestId }) {
   const [isRegion, setIsRegion] = useState(true);
   const [playRegion, setPlayRegion] = useState(false);
   const [playCrampedRegion, setPlayCrampedRegion] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [secondFile, setSecondFile] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState(null);
@@ -106,6 +106,7 @@ export default function Home({ requestId }) {
             setPlayCrampedRegion={setPlayCrampedRegion}
             selectedRegion={selectedRegion}
             setSelectedRegion={setSelectedRegion}
+            isLoading={isLoading}
           />
         ) : (
           <SecondMain
@@ -124,6 +125,7 @@ export default function Home({ requestId }) {
             setPlayCrampedRegion={setPlayCrampedRegion}
             secondSelectedRegion={secondSelectedRegion}
             setSecondSelectedRegion={setSecondSelectedRegion}
+            isLoading={isLoading}
           />
         )}
 
@@ -158,8 +160,9 @@ export default function Home({ requestId }) {
         selectedRegion={selectedRegion}
         secondSelectedRegion={secondSelectedRegion}
         requestId={requestId}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
       />
-      <Routes></Routes>
     </div>
   );
 }
