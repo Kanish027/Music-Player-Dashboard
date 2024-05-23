@@ -1,83 +1,40 @@
-import React, { useState, useRef } from "react";
-import Header from "./components/Header";
-import Main from "./components/Main";
-import Sidebar from "./components/Sidebar";
+import React, { lazy, Suspense, useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
 
-// New
-export default function App() {
-  const [audioFile, setAudioFile] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const audioPlayerRef = useRef(null);
-  const [isRegion, setIsRegion] = useState(true);
-  const [playRegion, setPlayRegion] = useState(false);
-  const [playCrampedRegion, setPlayCrampedRegion] = useState(false);
+const Home = lazy(() => import("./Home"));
+const Report = lazy(() => import("./components/Report"));
 
-  const playAudio = () => {
-    const audioPlayer = audioPlayerRef.current;
+const App = () => {
+  const [requestId, setRequestId] = useState("");
 
-    if (audioFile && audioPlayer) {
-      if (!isPlaying) {
-        audioPlayer.src = URL.createObjectURL(audioFile);
-        audioPlayer.currentTime = currentTime; // Set the current time before playing
-        audioPlayer.play();
-        setIsPlaying(true);
-      } else {
-        setCurrentTime(audioPlayer.currentTime); // Store the current playback position
-        audioPlayer.pause();
-        setIsPlaying(false);
-      }
-    }
+  const generateRequestId = () => {
+    const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const firstThree = Array.from({ length: 3 }, () =>
+      alphabets.charAt(Math.floor(Math.random() * alphabets.length))
+    ).join("");
+    const timestamp = new Date().getTime().toString().slice(-8);
+    return `${firstThree}${timestamp}`;
   };
 
-  const handleFileChange = (file) => {
-    setAudioFile(file);
-    setIsPlaying(false);
-    setCurrentTime(0); // Reset playback position when a new file is selected
-  };
-
-  const handleAudioEnded = () => {
-    // Handle audio playback end
-    setIsPlaying(false);
-    setCurrentTime(0); // Reset playback position
-  };
+  useEffect(() => {
+    const newRequestId = generateRequestId();
+    setRequestId(newRequestId);
+  }, []);
 
   return (
-    <div className="flex justify-between">
-      <div className="w-full h-screen bg-slate-900">
-        <Header onFileChange={handleFileChange} />
-        <Main
-          audioFile={audioFile}
-          isPlaying={isPlaying}
-          currentTime={currentTime}
-          setCurrentTime={setCurrentTime}
-          onAudioEnded={handleAudioEnded}
-          audioPlayerRef={audioPlayerRef}
-          setIsPlaying={setIsPlaying}
-          isRegion={isRegion}
-          setIsRegion={setIsRegion}
-          playRegion={playRegion}
-          setPlayRegion={setPlayRegion}
-          playCrampedRegion={playCrampedRegion} // Pass the new state
-          setPlayCrampedRegion={setPlayCrampedRegion}
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        <Route
+          path="*"
+          element={<Home requestId={requestId} setRequestId={setRequestId} />}
         />
-        {/* Define the audio player */}
-        <audio
-          ref={audioPlayerRef}
-          onEnded={handleAudioEnded}
-          onPause={() => setIsPlaying(false)}
+        <Route
+          path="/report"
+          element={<Report requestId={requestId} setRequestId={setRequestId} />}
         />
-      </div>
-      <Sidebar
-        onPlayAudio={playAudio}
-        isPlaying={isPlaying}
-        isRegion={isRegion}
-        setIsRegion={setIsRegion}
-        playRegion={playRegion}
-        setPlayRegion={setPlayRegion}
-        playCrampedRegion={playCrampedRegion} // Pass the new state
-        setPlayCrampedRegion={setPlayCrampedRegion} // Pass the function to set the new state
-      />
-    </div>
+      </Routes>
+    </Suspense>
   );
-}
+};
+
+export default App;

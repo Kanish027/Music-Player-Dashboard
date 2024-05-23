@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.esm.js";
 
-const Main = ({
+const SecondMain = ({
   audioFile,
   isPlaying,
   setIsPlaying,
@@ -13,12 +13,20 @@ const Main = ({
   setCurrentTime,
   playCrampedRegion,
   setPlayCrampedRegion,
-  selectedRegion,
-  setSelectedRegion,
+  secondSelectedRegion,
+  setSecondSelectedRegion,
 }) => {
   const waveformRef = useRef(null);
   const wavesurferRef = useRef(null);
   const [crampedRegion, setCrampedRegion] = useState(null);
+  console.log(secondSelectedRegion);
+
+  const handleUpdateRegion = (region) => {
+    setSecondSelectedRegion({
+      start: region.start,
+      end: region.end,
+    });
+  };
 
   const handleSelectRegion = () => {
     setIsPlaying(false);
@@ -145,13 +153,6 @@ const Main = ({
     }
   };
 
-  const handleUpdateRegion = (region) => {
-    setSelectedRegion({
-      start: region.start,
-      end: region.end,
-    });
-  };
-
   useEffect(() => {
     const previousWavesurfer = wavesurferRef.current;
 
@@ -247,4 +248,4 @@ const Main = ({
   );
 };
 
-export default Main;
+export default SecondMain;
