@@ -43,7 +43,7 @@ export const uploadAudio = (
           })
           .catch((error) => {
             console.error("Error:", error);
-            alert("Failed to upload audio due to CORS issue or server error.");
+            // alert("Failed to upload audio due to CORS issue or server error.");
             reject(error);
           });
       };
