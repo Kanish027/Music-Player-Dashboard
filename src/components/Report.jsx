@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 const Report = ({ requestId }) => {
   const [pitch1, setPitch1] = useState("");
@@ -7,15 +7,7 @@ const Report = ({ requestId }) => {
   const [audioWaveform2, setAudioWaveform2] = useState("");
   const [matchingProbability, setMatchingProbability] = useState("");
 
-  useEffect(() => {
-    if (requestId) {
-      fetchPitchValues();
-      fetchAudioImages();
-      fetchPrediction();
-    }
-  }, [requestId]);
-
-  const fetchPitchValues = async () => {
+  const fetchPitchValues = useCallback(async () => {
     try {
       const response = await fetch(
         `http://speakerid.iphipi.com/get_pitch?request_id=${requestId}`
@@ -30,9 +22,9 @@ const Report = ({ requestId }) => {
     } catch (error) {
       console.error("Error fetching pitch values:", error);
     }
-  };
+  }, [requestId]);
 
-  const fetchAudioImages = async () => {
+  const fetchAudioImages = useCallback(async () => {
     try {
       const response = await fetch(
         `http://speakerid.iphipi.com/images?request_id=${requestId}`
@@ -47,9 +39,9 @@ const Report = ({ requestId }) => {
     } catch (error) {
       console.error("Error fetching audio images:", error);
     }
-  };
+  }, [requestId]);
 
-  const fetchPrediction = async () => {
+  const fetchPrediction = useCallback(async () => {
     try {
       const response = await fetch(
         `http://speakerid.iphipi.com/predict?request_id=${requestId}`
@@ -63,7 +55,15 @@ const Report = ({ requestId }) => {
     } catch (error) {
       console.error("Error fetching prediction:", error);
     }
-  };
+  }, [requestId]);
+
+  useEffect(() => {
+    if (requestId) {
+      fetchPitchValues();
+      fetchAudioImages();
+      fetchPrediction();
+    }
+  }, [requestId, fetchPitchValues, fetchAudioImages, fetchPrediction]);
 
   const handlePrint = () => {
     window.print();
