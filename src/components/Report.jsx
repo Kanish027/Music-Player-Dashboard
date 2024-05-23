@@ -10,7 +10,7 @@ const Report = ({ requestId }) => {
   const fetchPitchValues = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://speakerid.iphipi.com/get_pitch?request_id=${requestId}`
+        `https://speakerid.iphipi.com/get_pitch?request_id=${requestId}`
       );
       const data = await response.json();
       if (data.error) {
@@ -27,7 +27,7 @@ const Report = ({ requestId }) => {
   const fetchAudioImages = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://speakerid.iphipi.com/images?request_id=${requestId}`
+        `https://speakerid.iphipi.com/images?request_id=${requestId}`
       );
       const data = await response.json();
       if (data.error) {
@@ -44,7 +44,7 @@ const Report = ({ requestId }) => {
   const fetchPrediction = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://speakerid.iphipi.com/predict?request_id=${requestId}`
+        `https://speakerid.iphipi.com/predict?request_id=${requestId}`
       );
       const data = await response.json();
       if (data.error) {

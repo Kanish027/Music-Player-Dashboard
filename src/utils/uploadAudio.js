@@ -11,7 +11,7 @@ export const uploadAudio = (
       reader.readAsDataURL(audioFile);
       reader.onloadend = function () {
         const base64AudioData = reader.result.split(",")[1];
-        const serverUrl = `http://speakerid.iphipi.com/upload_audio`;
+        const serverUrl = `https://speakerid.iphipi.com/upload_audio`;
 
         fetch(serverUrl, {
           method: "POST",
