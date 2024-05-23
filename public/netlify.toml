@@ -1,7 +1,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "http://speakerid.iphipi.com/:splat"
+  to = "https://speakerid.iphipi.com/:splat"
   status = 200
 
 [[redirects]]
